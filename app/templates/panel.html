@@ -2,10 +2,15 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LeadFlow CRM</title>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+        * {
+            box-sizing: border-box;
+        }
 
         body {
             margin: 0;
@@ -17,17 +22,21 @@
         .container {
             max-width: 1200px;
             margin: auto;
-            padding: 40px 20px;
+            padding: 24px 16px;
         }
 
+        /* HEADER */
         .header {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 25px;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
         }
 
         .title {
-            font-size: 26px;
+            font-size: 22px;
             font-weight: 700;
         }
 
@@ -36,6 +45,7 @@
             color: #94a3b8;
         }
 
+        /* BUTTONS */
         .btn {
             background: linear-gradient(135deg, #4f46e5, #3b82f6);
             border: none;
@@ -46,6 +56,7 @@
             font-weight: 600;
             text-decoration: none;
             display: inline-block;
+            font-size: 13px;
         }
 
         .btn:hover {
@@ -56,27 +67,60 @@
             background: #1e293b;
         }
 
+        /* PIPELINE */
         .pipeline {
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 8px;
+            margin-bottom: 16px;
             flex-wrap: wrap;
         }
 
+        /* TOPBAR */
         .topbar {
             display: flex;
             justify-content: space-between;
             margin-bottom: 15px;
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
         .left {
             display: flex;
             gap: 10px;
             align-items: center;
+            flex-wrap: wrap;
+        }
+
+        /* INPUTS */
+        input, select {
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            background: #111827;
+            color: white;
+            outline: none;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            max-width: 280px;
+        }
+
+        select {
+            width: 140px;
+        }
+
+        /* TABLE WRAPPER (RESPONSIVE FIX) */
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            border-radius: 14px;
         }
 
         .table {
             width: 100%;
+            min-width: 800px;
             border-collapse: collapse;
             background: rgba(30, 41, 59, 0.7);
             border-radius: 14px;
@@ -109,6 +153,7 @@
             color: #60a5fa;
         }
 
+        /* BADGES */
         .badge {
             padding: 4px 10px;
             border-radius: 999px;
@@ -120,6 +165,7 @@
         .mid { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
         .low { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
 
+        /* ACTIONS */
         .action-btn {
             padding: 6px 10px;
             border-radius: 8px;
@@ -127,22 +173,47 @@
             font-weight: 600;
             margin-right: 5px;
             text-decoration: none;
+            display: inline-block;
         }
 
         .wa { background: rgba(34, 197, 94, 0.15); color: #22c55e; }
         .mail { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
 
-        input {
-            padding: 10px;
-            border-radius: 8px;
-            border: none;
-            width: 250px;
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+
+            .title {
+                font-size: 18px;
+            }
+
+            .subtitle {
+                font-size: 12px;
+            }
+
+            .btn {
+                padding: 9px 12px;
+                font-size: 12px;
+            }
+
+            input {
+                max-width: 100%;
+            }
+
+            .topbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .left {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            select {
+                width: 100%;
+            }
         }
 
-        select {
-            padding: 10px;
-            border-radius: 8px;
-        }
     </style>
 </head>
 
@@ -159,16 +230,14 @@
 
     <!-- PIPELINE -->
     <div class="pipeline">
-
         <a href="/leads/panel"><span class="btn btn-secondary">Todos</span></a>
         <a href="/leads/panel?status=new"><span class="btn">🟡 Nuevos</span></a>
         <a href="/leads/panel?status=contacted"><span class="btn">🔵 Contactados</span></a>
         <a href="/leads/panel?status=follow_up"><span class="btn">🟠 Seguimiento</span></a>
         <a href="/leads/panel?status=client"><span class="btn">🟢 Clientes</span></a>
-
     </div>
 
-    <!-- SCRAPER DINÁMICO (NICHOS) -->
+    <!-- SCRAPER -->
     <div class="topbar">
 
         <form action="/leads/scrape-ui" method="post" class="left">
@@ -176,7 +245,7 @@
             <input 
                 type="text" 
                 name="query"
-                placeholder="Ej: barberías en Córdoba / metalúrgicas Villa María"
+                placeholder="Ej: barberías en Córdoba / talleres Villa María"
                 required
             >
 
@@ -189,7 +258,7 @@
     </div>
 
     <!-- FILTERS -->
-    <form method="GET" action="/leads/panel" style="margin-bottom:20px; display:flex; gap:10px;">
+    <form method="GET" action="/leads/panel" style="margin-bottom:20px; display:flex; gap:10px; flex-wrap:wrap;">
 
         <input type="text" name="search" placeholder="Buscar lead...">
 
@@ -204,71 +273,75 @@
     </form>
 
     <!-- TABLE -->
-    <table class="table">
+    <div class="table-wrapper">
 
-        <thead>
+        <table class="table">
+
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Teléfono</th>
+                    <th>Web</th>
+                    <th>Dirección</th>
+                    <th>Score</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+            {% for lead in leads %}
+
             <tr>
-                <th>Nombre</th>
-                <th>Teléfono</th>
-                <th>Web</th>
-                <th>Dirección</th>
-                <th>Score</th>
-                <th>Acción</th>
+                <td><strong>{{ lead.nombre }}</strong></td>
+                <td>{{ lead.telefono }}</td>
+
+                <td>
+                    {% if lead.web %}
+                        <a href="{{ lead.web }}" target="_blank">Abrir</a>
+                    {% else %}
+                        —
+                    {% endif %}
+                </td>
+
+                <td>{{ lead.direccion }}</td>
+
+                <td>
+                    {% if lead.score >= 70 %}
+                        <span class="badge high">{{ lead.score }}</span>
+                    {% elif lead.score >= 40 %}
+                        <span class="badge mid">{{ lead.score }}</span>
+                    {% else %}
+                        <span class="badge low">{{ lead.score }}</span>
+                    {% endif %}
+                </td>
+
+                <td>
+                    {% if lead.telefono %}
+                        <a class="action-btn wa"
+                           href="https://wa.me/54{{ lead.telefono | replace(' ', '') | replace('-', '') }}"
+                           target="_blank">
+                           WhatsApp
+                        </a>
+                    {% endif %}
+
+                    {% if lead.email %}
+                        <a class="action-btn mail"
+                           href="mailto:{{ lead.email }}">
+                           Email
+                        </a>
+                    {% endif %}
+                </td>
+
             </tr>
-        </thead>
 
-        <tbody>
+            {% endfor %}
 
-        {% for lead in leads %}
+            </tbody>
 
-        <tr>
-            <td><strong>{{ lead.nombre }}</strong></td>
-            <td>{{ lead.telefono }}</td>
+        </table>
 
-            <td>
-                {% if lead.web %}
-                    <a href="{{ lead.web }}" target="_blank">Abrir</a>
-                {% else %}
-                    —
-                {% endif %}
-            </td>
-
-            <td>{{ lead.direccion }}</td>
-
-            <td>
-                {% if lead.score >= 70 %}
-                    <span class="badge high">{{ lead.score }}</span>
-                {% elif lead.score >= 40 %}
-                    <span class="badge mid">{{ lead.score }}</span>
-                {% else %}
-                    <span class="badge low">{{ lead.score }}</span>
-                {% endif %}
-            </td>
-
-            <td>
-                {% if lead.telefono %}
-                    <a class="action-btn wa"
-                       href="https://wa.me/54{{ lead.telefono | replace(' ', '') | replace('-', '') }}"
-                       target="_blank">
-                       WhatsApp
-                    </a>
-                {% endif %}
-
-                {% if lead.email %}
-                    <a class="action-btn mail"
-                       href="mailto:{{ lead.email }}">
-                       Email
-                    </a>
-                {% endif %}
-            </td>
-
-        </tr>
-
-        {% endfor %}
-
-        </tbody>
-
-    </table>
+    </div>
 
 </div>
 
